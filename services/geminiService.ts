@@ -1,7 +1,33 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
-const apiKey = process.env.API_KEY || ''; // Ensure this is set in your environment
-const ai = new GoogleGenAI({ apiKey });
+// Helper to get key safely in a browser environment
+const getApiKey = (): string => {
+    // 1. Check local storage (user entered it previously)
+    let key = localStorage.getItem('GEMINI_API_KEY');
+    
+    // 2. If no key, ask the user
+    if (!key) {
+        key = prompt("请输入您的 Google Gemini API Key (它将仅保存在您的本地浏览器中以开启AI功能):", "");
+        if (key) {
+            localStorage.setItem('GEMINI_API_KEY', key.trim());
+        }
+    }
+    return key || '';
+};
+
+// Initialize client conditionally
+let ai: GoogleGenAI | null = null;
+
+const getAIClient = () => {
+    const apiKey = getApiKey();
+    if (!apiKey) return null;
+    
+    // Create instance if not exists
+    if (!ai) {
+        ai = new GoogleGenAI({ apiKey });
+    }
+    return ai;
+};
 
 export interface AnalysisResult {
     keywords: string[];
@@ -10,17 +36,16 @@ export interface AnalysisResult {
 }
 
 export const analyzeUserPreference = async (text: string): Promise<AnalysisResult> => {
-    if (!apiKey) {
-        console.warn("Gemini API Key missing. Returning default analysis.");
-        return {
-            keywords: ['美食', '咖啡', '甜点'],
-            emoji: '✨',
-            message: 'Falling back to local discovery...'
-        };
+    const client = getAIClient();
+
+    // If user cancelled the prompt or key is missing, fallback to local mock
+    if (!client) {
+        console.warn("No Gemini API Key provided. Falling back to local mode.");
+        return fallbackAnalysis(text);
     }
 
     try {
-        const response = await ai.models.generateContent({
+        const response = await client.models.generateContent({
             model: 'gemini-3-flash-preview',
             contents: `User says: "${text}". 
             Analyze this text to determine the user's mood and food cravings. 
@@ -48,10 +73,47 @@ export const analyzeUserPreference = async (text: string): Promise<AnalysisResul
 
     } catch (error) {
         console.error("Gemini Analysis Failed:", error);
-        return {
-            keywords: ['美食'],
-            emoji: '🍲',
-            message: '用心感受生活...'
-        };
+        
+        // Handle invalid key specifically (400/401/403 errors)
+        const errStr = JSON.stringify(error);
+        if (errStr.includes('400') || errStr.includes('401') || errStr.includes('403') || errStr.includes('PERMISSION_DENIED')) {
+            localStorage.removeItem('GEMINI_API_KEY');
+            alert("API Key 似乎无效或过期，已自动清除。请重新尝试搜索并输入新的 Key。");
+            // Force reload to clear client state could be an option, but let's just fallback for now
+        }
+
+        return fallbackAnalysis(text);
     }
 };
+
+// Fallback logic for when AI fails or no key
+const fallbackAnalysis = (text: string): AnalysisResult => {
+     let searchKeywords = ['美食'];
+    
+    if (text && text.trim().length > 0) {
+        const cleanText = text.trim();
+        if (cleanText.includes(' ')) {
+            searchKeywords = cleanText.split(' ').filter(k => k.length > 0);
+        } else {
+            searchKeywords = [cleanText];
+        }
+    }
+
+    const emojis = ['🍱', '🥘', '🍜', '🍣', '🥩', '🥗', '🍔', '🍕'];
+    const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+
+    const messages = [
+        "唯有美食与爱不可辜负",
+        "好好吃饭，好好爱自己",
+        "今天的胃口是自由的",
+        "在食物里寻找治愈",
+        "生活不仅要吃甜，还要吃肉",
+    ];
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+
+    return {
+        keywords: searchKeywords,
+        emoji: randomEmoji,
+        message: randomMessage
+    };
+}

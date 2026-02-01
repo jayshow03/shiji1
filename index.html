@@ -7,12 +7,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
     <script type="text/javascript">
-        // AMap Security Config - 请在此处填入您的安全密钥
+        // 【第一步】AMap 安全密钥 (Security Key)
+        // 访问 https://console.amap.com/dev/key/app 获取
         window._AMapSecurityConfig = { 
-            securityJsCode: '在此填入安全密钥' 
+            securityJsCode: '148b15168696bf2d4c5a862c820b46f9' 
         };
     </script>
-    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=在此填入API_Key&plugin=AMap.Geolocation,AMap.PlaceSearch,AMap.Driving,AMap.Walking"></script>
+    <!-- 【第二步】AMap Key (Web端 JSAPI) -->
+    <!-- 将 key= 后面的文字替换为你的 Key -->
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=a901af32eb215cb54d028a1554c30777&plugin=AMap.Geolocation,AMap.PlaceSearch,AMap.Driving,AMap.Walking"></script>
     <style>
         body {
             font-family: 'Noto Sans SC', sans-serif;
@@ -48,5 +51,7 @@
 </head>
 <body>
     <div id="root"></div>
+    <!-- Add entry point -->
+    <script type="module" src="/index.tsx"></script>
 </body>
 </html>
