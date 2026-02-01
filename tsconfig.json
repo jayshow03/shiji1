@@ -15,10 +15,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
-    "paths": {
-      "@google/genai": ["./declarations.d.ts"]
-    }
+    "baseUrl": "."
   },
   "include": ["**/*.ts", "**/*.tsx", "declarations.d.ts"],
   "exclude": ["node_modules"]
