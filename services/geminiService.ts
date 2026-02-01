@@ -26,8 +26,13 @@ const getAIClient = () => {
     
     // Create instance if not exists
     if (!ai) {
-        // @ts-ignore
-        ai = new GoogleGenAI({ apiKey });
+        try {
+            // @ts-ignore
+            ai = new GoogleGenAI({ apiKey });
+        } catch (e) {
+            console.error("Failed to initialize Gemini client:", e);
+            return null;
+        }
     }
     return ai;
 };
