@@ -1,0 +1,8 @@
+{
+  "name": "食机 5.5 - 智慧停车旗舰版",
+  "description": "A healing food and parking discovery app powered by Gemini and AMap.",
+  "requestFramePermissions": [
+    "microphone",
+    "geolocation"
+  ]
+}
