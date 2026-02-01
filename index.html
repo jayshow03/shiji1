@@ -4,17 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>食机 - 智慧停车旗舰版</title>
+    <!-- Tailwind CSS (CDN is fine for simple usage, though npm is better for production) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
     <script type="text/javascript">
         // 【第一步】AMap 安全密钥 (Security Key)
-        // 访问 https://console.amap.com/dev/key/app 获取
         window._AMapSecurityConfig = { 
             securityJsCode: '148b15168696bf2d4c5a862c820b46f9' 
         };
     </script>
     <!-- 【第二步】AMap Key (Web端 JSAPI) -->
-    <!-- 将 key= 后面的文字替换为你的 Key -->
     <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=a901af32eb215cb54d028a1554c30777&plugin=AMap.Geolocation,AMap.PlaceSearch,AMap.Driving,AMap.Walking"></script>
     <style>
         body {
@@ -22,15 +21,12 @@
             background-color: #f5f5f4; /* Stone-100 */
             overflow: hidden; /* Prevent pull-to-refresh on mobile */
         }
-        /* Custom Art Font Class */
         .font-art {
             font-family: 'Ma Shan Zheng', cursive;
         }
-        /* Hide scrollbar for Chrome, Safari and Opera */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
-        /* Hide scrollbar for IE, Edge and Firefox */
         .no-scrollbar {
             -ms-overflow-style: none;  /* IE and Edge */
             scrollbar-width: none;  /* Firefox */
@@ -39,19 +35,21 @@
 <script type="importmap">
 {
   "imports": {
-    "react/": "https://esm.sh/react@^19.2.4/",
     "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.39.0",
     "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
     "framer-motion": "https://esm.sh/framer-motion@^12.29.2",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.39.0"
+    "vite": "https://esm.sh/vite@^7.3.1",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
   }
 }
 </script>
 </head>
 <body>
     <div id="root"></div>
-    <!-- Add entry point -->
+    <!-- Vite entry point -->
     <script type="module" src="/index.tsx"></script>
 </body>
 </html>
