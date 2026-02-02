@@ -8,6 +8,12 @@ export interface Parking {
     price: string;
     walkDistance: number | string;
     hasCharging: boolean;
+    location?: Location; // Added location for navigation
+}
+
+export interface Dish {
+    name: string;
+    price?: string; // Price is optional now as real API usually doesn't provide item-level prices
 }
 
 export interface Shop {
@@ -23,7 +29,8 @@ export interface Shop {
     driveTime?: number; // in minutes
     driveDistance?: string; // e.g. "2.5km"
     averageCost?: string; // e.g. "98"
-    featuredItems?: string[]; // Recommended dishes
+    featuredItems?: Dish[]; // Recommended dishes
+    tags?: string[]; // Review tags like "Service Good", "Cozy"
 }
 
 export interface UserPreference {
